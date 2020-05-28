@@ -1,22 +1,31 @@
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
 import java.util.Arrays;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         String fileName = "ava.png";
-
+        /*
         String currentPath = Client.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         int ind = currentPath.indexOf("client")+"client".length();
         currentPath = currentPath.substring(0,ind);
         System.out.println("currentPath: "+currentPath);
-        File dir = new File(currentPath);
+        */
+
+        CodeSource codeSource = Client.class.getProtectionDomain().getCodeSource();
+        File jarFile = new File(codeSource.getLocation().toURI().getPath());
+        System.out.println("jarDir: " + jarFile);
+        String jarDir = jarFile.getParentFile().getPath();
+        System.out.println("jarDir: " + jarDir);
+        File dir = new File(jarDir);
         File[] arrFiles = dir.listFiles();
         for (int j=0 ; j<arrFiles.length; j++) {
             System.out.println(arrFiles[j]);
         }
 
-        File file = new File(currentPath+"\\"+fileName);
+        File file = new File(jarDir+"\\"+fileName);
         if (file.exists()) {
             System.out.println("File: "+fileName+" exist! Size: "+file.length());
         }
