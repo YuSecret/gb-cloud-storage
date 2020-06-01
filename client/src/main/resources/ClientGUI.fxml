@@ -4,11 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.client.ClientController">
+<HBox stylesheets="Styles.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.client.ClientController">
 
     <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="Сервер" />
-        <ListView VBox.vgrow="ALWAYS">
+        <Label fx:id="serverPath" />
+        <ListView fx:id="serverFilesList" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin>
@@ -16,9 +17,9 @@
             <Insets bottom="5.0" top="5.0" />
          </padding></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" />
-            <Button maxWidth="Infinity" text="Удалить" />
-            <Button maxWidth="Infinity" text="Переместить" />
+            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Переместить" HBox.hgrow="ALWAYS" />
         </HBox>
       <padding>
           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -27,14 +28,15 @@
     </VBox>
     <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="Клиент" />
-        <ListView VBox.vgrow="ALWAYS">
+        <Label fx:id="clientPath" />
+        <ListView fx:id="clientFilesList" onMouseClicked="#onClientFilesListClick" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" />
-            <Button maxWidth="Infinity" text="Удалить" />
-            <Button maxWidth="Infinity" text="Переместить" />
+            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Переместить" HBox.hgrow="ALWAYS" />
         </HBox>
       <padding>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
