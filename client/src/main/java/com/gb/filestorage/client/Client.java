@@ -1,3 +1,5 @@
+package com.gb.filestorage.client;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
@@ -8,7 +10,7 @@ public class Client {
     public static void main(String[] args) throws IOException, URISyntaxException {
         String fileName = "ava.png";
         /*
-        String currentPath = Client.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String currentPath = com.gb.filestorage.client.Client.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         int ind = currentPath.indexOf("client")+"client".length();
         currentPath = currentPath.substring(0,ind);
         System.out.println("currentPath: "+currentPath);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+
+    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+        <ListView prefHeight="200.0" prefWidth="200.0" />
+        <Button text="Копировать" maxWidth="Infinity"></Button>
+    </VBox>
+    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+        <ListView prefHeight="200.0" prefWidth="200.0" />
+        <Button text="Копировать" maxWidth="Infinity"></Button>
+    </VBox>
+
+</HBox>

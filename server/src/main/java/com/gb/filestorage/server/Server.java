@@ -1,18 +1,21 @@
-import javax.swing.*;
+package com.gb.filestorage.server;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Server {
-    ServerGUI serverGUI;
-
-    public Server(ServerGUI serverGUI) {
+    private ServerController serverGUI;
+    private ServerSocket server;
+    private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss: ");
+    public Server(ServerController serverGUI) {
         this.serverGUI = serverGUI;
     }
 
     public void start(int port) throws IOException {
-        ServerSocket server = new ServerSocket(port);
+        this.server = new ServerSocket(port);
         Socket socket = server.accept();
 
         serverGUI.onServerMessage(this,"Client accepted!");
@@ -36,8 +39,16 @@ public class Server {
         out.writeUTF("File: " + fileName + ", downloaded!");
     }
 
-    public void stop() {
+    public void stop() throws IOException {
+        if (server == null) {
+            serverGUI.onServerMessage(this,dateFormat.format(System.currentTimeMillis()) +"com.gb.filestorage.Server is not running");
+        } else {
+            server.close();
+            server=null;
+            serverGUI.onServerMessage(this,dateFormat.format(System.currentTimeMillis()) +"com.gb.filestorage.Server stopped");
+        }
     }
+
 
     public void dropAllClients() {
     }
