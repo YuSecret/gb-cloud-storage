@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<HBox xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.client.ClientController">
 
-    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
-        <ListView prefHeight="200.0" prefWidth="200.0" />
-        <Button text="Копировать" maxWidth="Infinity"></Button>
+    <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
+        <Label text="Сервер" />
+        <ListView VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></ListView>
+        <HBox spacing="5">
+            <Button maxWidth="Infinity" text="Копировать" />
+            <Button maxWidth="Infinity" text="Удалить" />
+            <Button maxWidth="Infinity" text="Переместить" />
+        </HBox>
+      <padding>
+          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
+
     </VBox>
-    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
-        <ListView prefHeight="200.0" prefWidth="200.0" />
-        <Button text="Копировать" maxWidth="Infinity"></Button>
+    <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
+        <Label text="Клиент" />
+        <ListView VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin></ListView>
+        <HBox spacing="5">
+            <Button maxWidth="Infinity" text="Копировать" />
+            <Button maxWidth="Infinity" text="Удалить" />
+            <Button maxWidth="Infinity" text="Переместить" />
+        </HBox>
+      <padding>
+         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
     </VBox>
 
 </HBox>
