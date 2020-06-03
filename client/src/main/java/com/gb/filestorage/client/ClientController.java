@@ -1,6 +1,6 @@
 package com.gb.filestorage.client;
 
-import com.db.filestorage.common.FileInfo;
+import com.gb.filestorage.common.FileInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
