@@ -50,7 +50,7 @@ public class CloudServer implements  ServerListener{
     }
     public void stop() throws Exception {
         try {
-            future.channel().closeFuture().sync();
+            future.channel().closeFuture();
         } finally {
             mainGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

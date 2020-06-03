@@ -5,15 +5,21 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.server.ServerController">
-    <Label fx:id="status" />
-<HBox spacing="5.0">
-    <Button alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" text="Старт" HBox.hgrow="ALWAYS"
-            onAction="#actionServerStart" fx:id="btnStartServer"/>
-      <padding>
-         <Insets left="5.0" right="5.0" />
-      </padding>
-
-</HBox>
+    <HBox>
+        <Label fx:id="status" alignment="TOP_LEFT" style="font-color:red;"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Button alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" text="Старт" HBox.hgrow="ALWAYS"
+                onAction="#actionServerStart" fx:id="btnStartServer"/>
+          <padding>
+             <Insets left="5.0" right="5.0" />
+          </padding>
+        <Button alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" text="Стоп" HBox.hgrow="ALWAYS"
+                onAction="#actionServerStop" fx:id="btnStopServer"/>
+        <padding>
+            <Insets left="5.0" right="5.0" />
+        </padding>
+    </HBox>
     <TextArea prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" fx:id="log" editable="false">
     </TextArea>
 </VBox>
