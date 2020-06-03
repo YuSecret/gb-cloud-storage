@@ -16,7 +16,6 @@ public class ServerMain extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }

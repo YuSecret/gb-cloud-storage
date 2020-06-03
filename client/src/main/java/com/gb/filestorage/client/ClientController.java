@@ -102,9 +102,6 @@ public class ClientController implements Initializable {
         finally {
             return out;
         }
-
-
-
     }
 
     public void onClientFilesListClick(MouseEvent mouseEvent) {

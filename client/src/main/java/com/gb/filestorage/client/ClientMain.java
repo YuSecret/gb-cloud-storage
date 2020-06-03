@@ -12,7 +12,7 @@ public class ClientMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/ClientGUI.fxml"));
         primaryStage.setTitle("com.gb.filestorage.client File Storage");
-        primaryStage.setScene(new Scene(root, 860, 500));
+        primaryStage.setScene(new Scene(root, 860, 540));
         primaryStage.show();
     }
 
