@@ -5,6 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 import javax.swing.*;
 import java.text.DateFormat;
@@ -38,6 +42,7 @@ public class ServerController {
         };
         t1.start();
         status.setText("started");
+        status.setTextFill(Paint.valueOf("#05a482"));
     }
     public void putLog(String msg) {
         log.appendText(dateFormat.format(System.currentTimeMillis())+" "+msg +"\n");
@@ -48,5 +53,6 @@ public class ServerController {
         server.stop();
         isRun = false;
         status.setText("stopped");
+        status.setTextFill(Paint.valueOf("#000000"));
     }
 }

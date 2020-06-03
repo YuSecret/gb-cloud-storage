@@ -6,20 +6,24 @@
 
 <VBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.server.ServerController">
     <HBox>
-        <Label fx:id="status" alignment="TOP_LEFT" style="font-color:red;"/>
-    </HBox>
-    <HBox spacing="5.0">
-        <Button alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" text="Старт" HBox.hgrow="ALWAYS"
-                onAction="#actionServerStart" fx:id="btnStartServer"/>
-          <padding>
-             <Insets left="5.0" right="5.0" />
-          </padding>
-        <Button alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" text="Стоп" HBox.hgrow="ALWAYS"
-                onAction="#actionServerStop" fx:id="btnStopServer"/>
+        <Label fx:id="status" alignment="TOP_LEFT">
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></Label>
         <padding>
             <Insets left="5.0" right="5.0" />
         </padding>
     </HBox>
-    <TextArea prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" fx:id="log" editable="false">
+    <HBox spacing="5.0">
+        <Button fx:id="btnStartServer" alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#actionServerStart" text="Старт" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnStopServer" alignment="TOP_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#actionServerStop" text="Стоп" HBox.hgrow="ALWAYS" />
+          <padding>
+             <Insets left="5.0" right="5.0" />
+          </padding>
+        <padding>
+            <Insets left="5.0" right="5.0" />
+        </padding>
+    </HBox>
+    <TextArea fx:id="log" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
     </TextArea>
 </VBox>
