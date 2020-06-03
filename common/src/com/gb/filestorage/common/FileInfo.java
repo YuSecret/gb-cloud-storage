@@ -1,4 +1,4 @@
-package com.gb.filestorage.client;
+package com.gb.filestorage.common;
 
 import com.sun.corba.se.impl.ior.ObjectIdImpl;
 
