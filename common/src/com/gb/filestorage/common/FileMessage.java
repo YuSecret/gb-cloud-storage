@@ -6,35 +6,37 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileInfo {
+public class FileMessage extends AbstractMessage{
     private String fileName;
     private long fileSize;
     public static final String upDir="[..]";
+    private byte [] data;
+
+
     public String getFileName() {
         return fileName;
     }
-
     public long getFileSize() {
         return fileSize;
     }
+    public byte[] getData() {return data;}
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    public FileInfo(Path path) {
-        try {
-            this.fileName = path.getFileName().toString();
-            if (Files.isDirectory(path)) {
-                this.fileSize = -1L;
-            } else {
-                this.fileSize = Files.size(path);
-            }
+
+
+    public FileMessage(Path path) throws IOException {
+        this.fileName = path.getFileName().toString();
+        if (Files.isDirectory(path)) {
+            this.fileSize = -1L;
+        } else {
+            this.fileSize = Files.size(path);
         }
-        catch (IOException e) {
-            throw new RuntimeException("Wrong with file: " + path.toAbsolutePath().toString());
-        }
+        this.data = Files.readAllBytes(path);
     }
-    public FileInfo(String fileName, long size) {
+
+    public FileMessage(String fileName, long size) {
         this.fileName = fileName;
         this.fileSize = size;
     }

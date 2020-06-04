@@ -1,57 +1,52 @@
 package com.gb.filestorage.client;
 
-import java.io.*;
+import com.gb.filestorage.common.AbstractMessage;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
+import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
+
+import java.io.IOException;
 import java.net.Socket;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-import java.util.Arrays;
 
 public class Client {
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        String fileName = "ava.png";
-        /*
-        String currentPath = com.gb.filestorage.client.Client.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        int ind = currentPath.indexOf("client")+"client".length();
-        currentPath = currentPath.substring(0,ind);
-        System.out.println("currentPath: "+currentPath);
-        */
+    private static Socket socket;
+    private static ObjectEncoderOutputStream outputStream;
+    private static ObjectDecoderInputStream inputStream;
+    private static int port = 8189;
 
-        CodeSource codeSource = Client.class.getProtectionDomain().getCodeSource();
-        File jarFile = new File(codeSource.getLocation().toURI().getPath());
-        System.out.println("jarDir: " + jarFile);
-        String jarDir = jarFile.getParentFile().getPath();
-        System.out.println("jarDir: " + jarDir);
-        File dir = new File(jarDir);
-        File[] arrFiles = dir.listFiles();
-        for (int j=0 ; j<arrFiles.length; j++) {
-            System.out.println(arrFiles[j]);
-        }
-
-        File file = new File(jarDir+"\\"+fileName);
-        if (file.exists()) {
-            System.out.println("File: "+fileName+" exist! Size: "+file.length());
-        }
-        else {
-            throw new FileNotFoundException("Такова нетуЭ");
-        }
-        try(Socket socket = new Socket("localhost", 8189)){
-            System.out.println("Connected to server");
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeUTF("ava.jpg");
-            out.writeLong(file.length());
-            FileInputStream fis = new FileInputStream(file);
-            byte [] buffer = new byte[8192];
-            int cnt = 0, x;
-            while ((x = fis.read()) != -1) {
-                out.write(x);
-                //out.flush();
-                Arrays.fill(buffer, (byte) 0);
-            }
-            String callBack = in.readUTF();
-            System.out.println(callBack);
-        } catch (Exception e) {
+    public static void start() throws IOException {
+        socket = new Socket("localhost", port);
+        outputStream = new ObjectEncoderOutputStream(socket.getOutputStream());
+        inputStream = new ObjectDecoderInputStream(socket.getInputStream(),1024);
+    }
+    public static void stop() {
+        try {
+            outputStream.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static boolean sendToServer(AbstractMessage message) {
+        try {
+            outputStream.writeObject(message);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public static AbstractMessage readFromServer() throws IOException, ClassNotFoundException {
+        Object object = inputStream.readObject();
+        return (AbstractMessage) object;
     }
 }

@@ -1,8 +1,8 @@
 package com.gb.filestorage.server;
 
+import com.gb.filestorage.common.FileRequest;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 
 public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     ServerController serverController;
@@ -26,9 +26,9 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println(msg.getClass().getName());
-        if (msg instanceof MyMessage) {
-            System.out.println("Client text message: " + ((MyMessage) msg).getText());
-            ctx.writeAndFlush(new MyMessage("Hello Client!"));
+        if (msg instanceof FileRequest) {
+            System.out.println("Client text message: " + ((FileRequest) msg).getFilename());
+            ctx.writeAndFlush(new FileRequest("Hello Client!"));
         } else {
             System.out.printf("Server received wrong object!");
         }
