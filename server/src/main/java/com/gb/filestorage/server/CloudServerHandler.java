@@ -25,7 +25,7 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println(msg.getClass().getName());
+        System.out.println("channelRead: "+msg.getClass().getName());
         if (msg instanceof FileRequest) {
             System.out.println("Client text message: " + ((FileRequest) msg).getFilename());
             ctx.writeAndFlush(new FileRequest("Hello Client!"));

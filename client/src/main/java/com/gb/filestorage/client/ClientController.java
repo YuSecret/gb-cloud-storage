@@ -2,6 +2,7 @@ package com.gb.filestorage.client;
 
 import com.gb.filestorage.common.AbstractMessage;
 import com.gb.filestorage.common.FileMessage;
+import com.gb.filestorage.common.FileRequest;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -205,15 +206,22 @@ public class ClientController implements Initializable {
         t.start();
     }
     public void onClientDownLoadClick(MouseEvent mouseEvent) {
-        refreshLocalList();
-        /*
-        FileMessage fileMessage = clientFilesList.getSelectionModel().getSelectedItem();
-        System.out.println(fileMessage.toString());
+        //refreshLocalList();
+        System.out.println("onClientDownLoadClick run!!!");
+        System.out.println("onClientDownLoadClick clientFilesList: " +clientFilesList);
+        System.out.println("onClientDownLoadClick clientFilesList.getSelectionModel(): " +clientFilesList.getSelectionModel());
+        clientFilesList.getSelectionModel().select(0);
+        //Object object = clientFilesList.getSelectionModel().getSelectedItem();
+        System.out.println("onClientDownLoadClick clientFilesList.getSelectionModel().getSelectedItem(): " +clientFilesList.getSelectionModel().getSelectedItem());
+        FileMessage fileMessage = serverFilesList.getSelectionModel().getSelectedItem();
+        System.out.println("fileMessage: "+fileMessage);
+        System.out.println(fileMessage.getFileName());
+
         if (!fileMessage.isDirectory() && !fileMessage.isUpElement()) {
             Client.sendToServer(new FileRequest(fileMessage.getFileName()));
         }
 
-        */
+
     }
     public void onClientFilesListClick(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {

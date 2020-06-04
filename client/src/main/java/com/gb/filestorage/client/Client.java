@@ -38,6 +38,8 @@ public class Client {
     }
     public static boolean sendToServer(AbstractMessage message) {
         try {
+            System.out.println("sendToServer message: "+message);
+            System.out.println("sendToServer outputStream: "+outputStream);
             outputStream.writeObject(message);
             return true;
         } catch (IOException e) {
@@ -46,6 +48,7 @@ public class Client {
         return false;
     }
     public static AbstractMessage readFromServer() throws IOException, ClassNotFoundException {
+        System.out.println("readFromServer start");
         Object object = inputStream.readObject();
         return (AbstractMessage) object;
     }
