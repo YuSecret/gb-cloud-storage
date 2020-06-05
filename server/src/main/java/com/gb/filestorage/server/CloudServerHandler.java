@@ -30,8 +30,8 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead: "+msg.getClass().getName());
         if (msg instanceof FileRequest) {
-            System.out.println("Client text message: " + ((FileRequest) msg).getFilename());
-            ctx.writeAndFlush(new FileMessage(Paths.get(((FileRequest) msg).getFilename())));
+            System.out.println("Client text message: " + ((FileRequest) msg).getFilepath());
+            ctx.writeAndFlush(new FileMessage(Paths.get(((FileRequest) msg).getFilepath())));
         } else {
             System.out.printf("Server received wrong object!");
         }

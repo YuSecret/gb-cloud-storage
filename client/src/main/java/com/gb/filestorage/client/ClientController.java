@@ -194,7 +194,7 @@ public class ClientController implements Initializable {
                     if (am instanceof FileMessage) {
                         FileMessage fm = (FileMessage) am;
                         System.out.println("onClientConnect Client read object fm"+fm.getFileName());
-                        Files.write(Paths.get("client_storage" + fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
+                        Files.write(Paths.get("client_storage", fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalList();
                     }
                 }
@@ -222,7 +222,7 @@ public class ClientController implements Initializable {
         if (!fileMessage.isDirectory() && !fileMessage.isUpElement()) {
             Path path = rootServer.resolve(fileMessage.getFileName());
             System.out.println("Забрать файл на сервере: "+path.toAbsolutePath().toString());
-            Client.sendToServer(new FileRequest(fileMessage.getFileName(), path));
+            Client.sendToServer(new FileRequest(fileMessage.getFileName(), path.toAbsolutePath().toString()));
         }
 
 
