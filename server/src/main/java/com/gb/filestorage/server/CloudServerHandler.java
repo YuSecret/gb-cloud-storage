@@ -1,8 +1,11 @@
 package com.gb.filestorage.server;
 
+import com.gb.filestorage.common.FileMessage;
 import com.gb.filestorage.common.FileRequest;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.nio.file.Paths;
 
 public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     ServerController serverController;
@@ -28,7 +31,7 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
         System.out.println("channelRead: "+msg.getClass().getName());
         if (msg instanceof FileRequest) {
             System.out.println("Client text message: " + ((FileRequest) msg).getFilename());
-            ctx.writeAndFlush(new FileRequest("Hello Client!"));
+            ctx.writeAndFlush(new FileMessage(Paths.get(((FileRequest) msg).getFilename())));
         } else {
             System.out.printf("Server received wrong object!");
         }
