@@ -1,9 +1,6 @@
 package com.gb.filestorage.client;
 
-import com.gb.filestorage.common.AbstractMessage;
-import com.gb.filestorage.common.FileMessage;
-import com.gb.filestorage.common.FileRequest;
-import com.gb.filestorage.common.UpdateMessage;
+import com.gb.filestorage.common.*;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -146,12 +143,11 @@ public class ClientController implements Initializable {
                     if (am instanceof UpdateMessage) {
                         System.out.println("onClientConnect UpdateMessage");
                         UpdateMessage um = (UpdateMessage) am;
-                        System.out.println("я прочитал " + um.getFileList());
-                        /*
-                        this.rootServer = um.getPath();
-                        refreshServerList(um.getFiles());
 
-                         */
+                    }
+                    if (am instanceof CloseConnectionRequest) {
+                        System.out.println("onClientConnect CloseConnectionRequest");
+                        break;
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

@@ -1,8 +1,6 @@
 package com.gb.filestorage.server;
 
-import com.gb.filestorage.common.FileMessage;
-import com.gb.filestorage.common.FileRequest;
-import com.gb.filestorage.common.UpdateMessage;
+import com.gb.filestorage.common.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -48,6 +46,15 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(fm);
             }
             ctx.writeAndFlush((Paths.get(((FileRequest) msg).getFilepath())));
+        } else if (msg instanceof DeleteRequest) {
+            System.out.println("DeleteRequest");
+            DeleteRequest dr = (DeleteRequest) msg;
+            Files.delete(Paths.get(serverDir + dr.getFilename()));
+            updateCloudListView(ctx);
+        } else if (msg instanceof CloseConnectionRequest) {
+            System.out.println("CloseConnectionRequest");
+            CloseConnectionRequest cr = (CloseConnectionRequest) msg;
+            ctx.writeAndFlush(cr);
         } else if (msg instanceof FileMessage) {
             System.out.println("FileMessage");
             FileMessage fm = (FileMessage) msg;
