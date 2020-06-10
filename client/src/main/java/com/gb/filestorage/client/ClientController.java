@@ -3,6 +3,7 @@ package com.gb.filestorage.client;
 import com.gb.filestorage.common.AbstractMessage;
 import com.gb.filestorage.common.FileMessage;
 import com.gb.filestorage.common.FileRequest;
+import com.gb.filestorage.common.UpdateMessage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,6 +25,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static com.gb.filestorage.common.Tools.readFileMessagesFromListPath;
+import static com.gb.filestorage.common.Tools.scanFiles;
+
 public class ClientController implements Initializable {
 
     Path rootClient;
@@ -63,117 +68,56 @@ public class ClientController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //refreshLocalList();
-       rootClient =  Paths.get("client_storage");
-       clientPath.setText(rootClient.toAbsolutePath().toString());
+        rootClient =  Paths.get("client_storage");
+        clientPath.setText(rootClient.toAbsolutePath().toString());
 
+        /*
        rootServer = Paths.get("server_storage");
        serverPath.setText(rootServer.toAbsolutePath().toString());
-
        refreshFilelists();
-
+        */
        //gotoPath(rootClient, clientFilesList);
+
     }
-    public void refreshFilelists() {
 
-        System.out.println("rootServer: "+rootServer.toAbsolutePath().toString());
-        List<FileMessage> filesServer = scanFiles(rootServer);
-        serverFilesList.getItems().clear();
-        serverFilesList.getItems().addAll(filesServer);
+    public void refreshServerList(List<Path> files) {
+        Platform.runLater(() -> {
 
-        for (FileMessage f : filesServer ) {
-            System.out.println("server "+f.getFileName());
-        }
+            serverPath.setText(rootServer.toAbsolutePath().toString());
+            serverFilesList.getItems().clear();
+            List<FileMessage> fmlist  = readFileMessagesFromListPath(files);
+            serverFilesList.getItems().addAll(fmlist);
 
-
-        List<FileMessage> filesClient = scanFiles(rootClient);
-        clientFilesList.getItems().clear();
-        clientFilesList.getItems().addAll(filesClient);
-
-        for (FileMessage f : filesClient ) {
-            System.out.println("client "+f.getFileName());
-        }
-
-
-        clientFilesList.setCellFactory(new Callback<ListView<FileMessage>, ListCell<FileMessage>>() {
-            @Override
-            public ListCell<FileMessage> call(ListView<FileMessage> param) {
-                return new ListCell<FileMessage>() {
-                    @Override
-                    protected void updateItem(FileMessage item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setText(null);
-                            setStyle("");
-                        }
-                        else {
-                            String formattedFileName = String.format("%-30s", item.getFileName());
-                            String formattedFileSize = String.format("%,d bytes", item.getFileSize());
-                            if (item.getFileSize() == -1L) {
-                                formattedFileSize = String.format("%s", "[ DIR ]");
+            serverFilesList.setCellFactory(new Callback<ListView<FileMessage>, ListCell<FileMessage>>() {
+                @Override
+                public ListCell<FileMessage> call(ListView<FileMessage> param) {
+                    return new ListCell<FileMessage>() {
+                        @Override
+                        protected void updateItem(FileMessage item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                                setStyle("");
                             }
-                            if (item.getFileSize() == -2L) {
-                                formattedFileSize = "";
+                            else {
+                                String formattedFileName = String.format("%-30s", item.getFileName());
+                                String formattedFileSize = String.format("%,d bytes", item.getFileSize());
+                                if (item.getFileSize() == -1L) {
+                                    formattedFileSize = String.format("%s", "[ DIR ]");
+                                }
+                                if (item.getFileSize() == -2L) {
+                                    formattedFileSize = "";
+                                }
+                                String st = String.format("%s %-20s", formattedFileName, formattedFileSize);
+                                setText(st);
                             }
-                            String st = String.format("%s %-20s", formattedFileName, formattedFileSize);
-                            setText(st);
                         }
-                    }
-                };
-            }
+                    };
+                }
 
+            });
         });
-
-        serverFilesList.setCellFactory(new Callback<ListView<FileMessage>, ListCell<FileMessage>>() {
-            @Override
-            public ListCell<FileMessage> call(ListView<FileMessage> param) {
-                return new ListCell<FileMessage>() {
-                    @Override
-                    protected void updateItem(FileMessage item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setText(null);
-                            setStyle("");
-                        }
-                        else {
-                            String formattedFileName = String.format("%-30s", item.getFileName());
-                            String formattedFileSize = String.format("%,d bytes", item.getFileSize());
-                            if (item.getFileSize() == -1L) {
-                                formattedFileSize = String.format("%s", "[ DIR ]");
-                            }
-                            if (item.getFileSize() == -2L) {
-                                formattedFileSize = "";
-                            }
-                            String st = String.format("%s %-20s", formattedFileName, formattedFileSize);
-                            setText(st);
-                        }
-                    }
-                };
-            }
-
-        });
-
     }
-    public List<FileMessage> scanFiles(Path root) {
-
-        List<FileMessage> out = new ArrayList<>();
-        try {
-            List<Path> pathsInRoot = Files.list(root).collect(Collectors.toList());
-            System.out.println("scanfiles "+root.toAbsolutePath().getFileName()+" "+pathsInRoot.toString());
-            for (Path p : pathsInRoot) {
-                out.add(new FileMessage(p));
-                System.out.println("scanfiles added: "+p.toAbsolutePath().getFileName()+" "+p.toString());
-            }
-        }
-        catch (IOException e) {
-            System.out.println("Exception: " + e.getMessage());
-            new RuntimeException("Files scan exception: "+ root.toString());
-            System.out.println("Exception^ ");
-        }
-        finally {
-            return out;
-        }
-    }
-
     public void refreshLocalList() {
         Platform.runLater(() -> {
             clientFilesList.getItems().clear();
@@ -188,14 +132,26 @@ public class ClientController implements Initializable {
         Client.start();
         Thread t = new Thread( () -> {
             try {
+                System.out.println("thread start");
                 while (true) {
+                    System.out.println("thread start cikl");
                     AbstractMessage am = Client.readFromServer();
                     System.out.println("onClientConnect Client read object");
                     if (am instanceof FileMessage) {
+                        System.out.println("onClientConnect FileMessage");
                         FileMessage fm = (FileMessage) am;
-                        System.out.println("onClientConnect Client read object fm"+fm.getFileName());
                         Files.write(Paths.get("client_storage", fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalList();
+                    }
+                    if (am instanceof UpdateMessage) {
+                        System.out.println("onClientConnect UpdateMessage");
+                        UpdateMessage um = (UpdateMessage) am;
+                        System.out.println("я прочитал " + um.getFileList());
+                        /*
+                        this.rootServer = um.getPath();
+                        refreshServerList(um.getFiles());
+
+                         */
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -207,20 +163,21 @@ public class ClientController implements Initializable {
         t.setDaemon(true);
         t.start();
     }
-    public void onClientDownLoadClick(MouseEvent mouseEvent) {
+    public void onClientDownLoadClick(MouseEvent mouseEvent) throws IOException {
         //refreshLocalList();
         System.out.println("onClientDownLoadClick run!!!");
-        System.out.println("onClientDownLoadClick clientFilesList: " +clientFilesList);
-        System.out.println("onClientDownLoadClick clientFilesList.getSelectionModel(): " +clientFilesList.getSelectionModel());
         clientFilesList.getSelectionModel().select(0);
-        //Object object = clientFilesList.getSelectionModel().getSelectedItem();
         System.out.println("onClientDownLoadClick clientFilesList.getSelectionModel().getSelectedItem(): " +clientFilesList.getSelectionModel().getSelectedItem());
-        FileMessage fileMessage = serverFilesList.getSelectionModel().getSelectedItem();
+
+        FileMessage fileMessage = new FileMessage(Paths.get("server_storage","1.txt"));
+        //FileMessage fileMessage = serverFilesList.getSelectionModel().getSelectedItem();
         System.out.println("fileMessage: "+fileMessage);
         System.out.println(fileMessage.getFileName());
 
         if (!fileMessage.isDirectory() && !fileMessage.isUpElement()) {
-            Path path = rootServer.resolve(fileMessage.getFileName());
+            System.out.println("no direct");
+            //Path path = rootServer.resolve(fileMessage.getFileName());
+            Path path = Paths.get("server_storage","1.txt");
             System.out.println("Забрать файл на сервере: "+path.toAbsolutePath().toString());
             Client.sendToServer(new FileRequest(fileMessage.getFileName(), path.toAbsolutePath().toString()));
         }
@@ -256,5 +213,15 @@ public class ClientController implements Initializable {
                 }
             }
         }
+    }
+
+    public void onClientExit(MouseEvent mouseEvent) {
+        Platform.exit();
+        Client.stop();
+    }
+
+    public void onClientUpdate(MouseEvent mouseEvent) {
+        System.out.println("onClientUpdate");
+        Client.sendToServer(new UpdateMessage(new ArrayList<>()));
     }
 }

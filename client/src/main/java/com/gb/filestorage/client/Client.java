@@ -12,12 +12,17 @@ public class Client {
     private static Socket socket;
     private static ObjectEncoderOutputStream outputStream;
     private static ObjectDecoderInputStream inputStream;
-    private static int port = 8189;
+    private final static int port = 8189;
+    private final static String host = "localhost";
 
-    public static void start() throws IOException {
-        socket = new Socket("localhost", port);
-        outputStream = new ObjectEncoderOutputStream(socket.getOutputStream());
-        inputStream = new ObjectDecoderInputStream(socket.getInputStream(),1024);
+    public static void start() {
+        try {
+            socket = new Socket(host, port);
+            outputStream = new ObjectEncoderOutputStream(socket.getOutputStream());
+            inputStream = new ObjectDecoderInputStream(socket.getInputStream(),1024);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void stop() {
         try {
