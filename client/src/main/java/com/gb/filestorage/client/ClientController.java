@@ -41,10 +41,10 @@ public class ClientController implements Initializable {
     PasswordField password;
 
     @FXML
-    Label lbl_state;
+    Label lbl_password;
 
     @FXML
-    Label lbl_password;
+    Label lbl_state;
 
     @FXML
     Button btn_connect;
@@ -53,6 +53,7 @@ public class ClientController implements Initializable {
         rootPathClient =  Paths.get("client_storage");
         lbl_clientPath.setText(rootPathClient.toAbsolutePath().toString());
         lbl_state.setText("Отключено");
+        lbl_state.setTextFill(Color.RED);
         refreshLocalList();
        //gotoPath(rootClient, clientFilesList);
     }
@@ -123,22 +124,26 @@ public class ClientController implements Initializable {
        // Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
     }
     public void onAuthentic(boolean isAthentic) {
-        if (isAthentic) {
-            login.setEditable(false);
-            password.setVisible(false);
-            lbl_password.setVisible(false);
-            btn_connect.setVisible(false);
-            lbl_state.setText("Подключено");
-            //lbl_state.setTextFill(Color.GREEN);
-        }
-        else {
-            login.setEditable(true);
-            password.setVisible(true);
-            lbl_password.setVisible(true);
-            btn_connect.setVisible(true);
-            lbl_state.setText("Отключено");
-            //lbl_state.setTextFill(Color.BLACK);
-        }
+        Platform.runLater(() -> {
+            if (isAthentic) {
+                lbl_state.setText("Подключено");
+                lbl_state.setTextFill(Color.GREEN);
+                login.setEditable(false);
+                password.setVisible(false);
+                lbl_password.setVisible(false);
+                btn_connect.setVisible(false);
+
+            }
+            else {
+                lbl_state.setText("Отключено");
+                lbl_state.setTextFill(Color.RED);
+                login.setEditable(true);
+                password.setVisible(true);
+                lbl_password.setVisible(true);
+                btn_connect.setVisible(true);
+            }
+        });
+
     }
     public void onClientDisconnect(MouseEvent mouseEvent) {
         System.out.println("onClientDisconnect");
