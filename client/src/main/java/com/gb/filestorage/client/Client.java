@@ -19,7 +19,7 @@ public class Client {
         try {
             socket = new Socket(host, port);
             outputStream = new ObjectEncoderOutputStream(socket.getOutputStream());
-            inputStream = new ObjectDecoderInputStream(socket.getInputStream(),1024);
+            inputStream = new ObjectDecoderInputStream(socket.getInputStream(),1024*1024*50);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +44,6 @@ public class Client {
     public static boolean sendToServer(AbstractMessage message) {
         try {
             System.out.println("sendToServer message: "+message);
-            System.out.println("sendToServer outputStream: "+outputStream);
             outputStream.writeObject(message);
             return true;
         } catch (IOException e) {

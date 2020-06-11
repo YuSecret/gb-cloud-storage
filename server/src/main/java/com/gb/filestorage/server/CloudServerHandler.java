@@ -10,15 +10,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.gb.filestorage.common.Tools.scanFiles;
 
 public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     ServerController serverController;
     private final String serverDir = "server_storage";
-    private final Path serverPath = Paths.get(serverDir);
+    private final Path rootPathServer = Paths.get(serverDir);
     public CloudServerHandler(ServerController serverController) {
         this.serverController = serverController;
     }
@@ -41,15 +37,17 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof FileRequest) {
             System.out.println("FileRequest");
             FileRequest fr = (FileRequest) msg;
-            if (Files.exists(Paths.get(serverDir + fr.getFilename()))) {
-                FileMessage fm = new FileMessage(Paths.get(serverDir + fr.getFilename()));
+            System.out.println("запрос на файл : " + Paths.get(serverDir , fr.getFilename()).toAbsolutePath().toString());
+            if (Files.exists(Paths.get(serverDir , fr.getFilename()))) {
+                System.out.println("Файл есть!");
+                FileMessage fm = new FileMessage(Paths.get(serverDir, fr.getFilename()));
                 ctx.writeAndFlush(fm);
             }
             ctx.writeAndFlush((Paths.get(((FileRequest) msg).getFilepath())));
         } else if (msg instanceof DeleteRequest) {
             System.out.println("DeleteRequest");
             DeleteRequest dr = (DeleteRequest) msg;
-            Files.delete(Paths.get(serverDir + dr.getFilename()));
+            Files.delete(Paths.get(serverDir,dr.getFilename()));
             updateCloudListView(ctx);
         } else if (msg instanceof CloseConnectionRequest) {
             System.out.println("CloseConnectionRequest");
@@ -58,7 +56,7 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
         } else if (msg instanceof FileMessage) {
             System.out.println("FileMessage");
             FileMessage fm = (FileMessage) msg;
-            Files.write(Paths.get(serverDir + fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
+            Files.write(Paths.get(serverDir, fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
             updateCloudListView(ctx);
         } else if (msg instanceof UpdateMessage) {
             System.out.println("UpdateMessage");
@@ -69,8 +67,8 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     }
     private void updateCloudListView(ChannelHandlerContext ctx) throws IOException {
         ArrayList<String> sList = new ArrayList<>();
-        Files.list(serverPath).map(path -> path.getFileName().toString()).forEach(sList::add);
-        ctx.writeAndFlush(new UpdateMessage(sList));
+        Files.list(rootPathServer).map(path -> path.getFileName().toString()).forEach(sList::add);
+        ctx.writeAndFlush(new UpdateMessage(sList, rootPathServer.toAbsolutePath().toString()));
     }
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

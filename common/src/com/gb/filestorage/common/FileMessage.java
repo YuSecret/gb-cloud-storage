@@ -34,6 +34,7 @@ public class FileMessage extends AbstractMessage{
             this.fileSize = Files.size(path);
         }
         this.data = Files.readAllBytes(path);
+        System.out.println(("Из конструктора this.fileName = "+this.fileName+" this.fileSize = "+ this.fileSize));
     }
 
     public FileMessage(String fileName, long size) {

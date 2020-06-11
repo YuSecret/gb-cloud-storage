@@ -15,7 +15,7 @@
         <Label text="Пароль" />
         <TextField fx:id="password" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
         <Button fx:id="btn_connect" maxWidth="Infinity" text="Подключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientConnect"/>
-        <Button fx:id="btn_update" maxWidth="Infinity" text="Обновить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientUpdate"/>
+        <Button fx:id="btn_update" maxWidth="Infinity" text="Отключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDisconnect"/>
         <Button fx:id="btn_disconnect" maxWidth="Infinity" text="Выход" HBox.hgrow="ALWAYS" onMouseClicked="#onClientExit">
             <HBox.margin>
                 <Insets left="5.0" right="5.0" />
@@ -47,8 +47,8 @@
             <Insets bottom="5.0" top="5.0" />
          </padding></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" />
-            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDownLoadClick"/>
+            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS"  onMouseClicked="#onClientDeleteClick"/>
         </HBox>
       <padding>
           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -58,13 +58,13 @@
     <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="Клиент" />
         <Label fx:id="clientPath" />
-        <ListView fx:id="clientFilesList" onMouseClicked="#onClientFilesListClick" VBox.vgrow="ALWAYS">
+        <ListView fx:id="clientFilesList" onMouseClicked="#onClientFilesListDblClick" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDownLoadClick"/>
-            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" onMouseClicked="#onServerDownLoadClick"/>
+            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" onMouseClicked="#onServerDeleteClick"/>
         </HBox>
       <padding>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
