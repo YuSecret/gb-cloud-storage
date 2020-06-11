@@ -5,10 +5,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,11 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.gb.filestorage.common.Tools.scanFiles;
 
 public class ClientController implements Initializable {
 
@@ -88,9 +83,9 @@ public class ClientController implements Initializable {
                         Files.write(Paths.get("client_storage", fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalList();
                     }
-                    if (am instanceof UpdateMessage) {
+                    if (am instanceof UpdateRequest) {
                         System.out.println("onClientConnect UpdateMessage");
-                        UpdateMessage um = (UpdateMessage) am;
+                        UpdateRequest um = (UpdateRequest) am;
                         rootPathServer = Paths.get(um.getCurrentServerDir());
                         refreshServerList(um.getFileList());
                     }
@@ -107,7 +102,7 @@ public class ClientController implements Initializable {
         });
         t.setDaemon(true);
         t.start();
-        Client.sendToServer(new UpdateMessage(new ArrayList<>(), ""));
+        Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
     }
     public void onClientDisconnect(MouseEvent mouseEvent) {
         System.out.println("onClientDisconnect");
@@ -154,7 +149,7 @@ public class ClientController implements Initializable {
 
     public void onClientUpdate(MouseEvent mouseEvent) {
         System.out.println("onClientUpdate");
-        Client.sendToServer(new UpdateMessage(new ArrayList<>(), ""));
+        Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
     }
 
     public void onClientDeleteClick(MouseEvent mouseEvent) {

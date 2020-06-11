@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Tools {
+    //временный склад ненужного кода. Потом удалю
     public void gotoPath(Path path, ListView<FileMessage> listView) {
         /*
         if (listView != clientFilesList) { return; }

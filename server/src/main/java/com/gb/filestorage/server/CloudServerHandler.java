@@ -34,8 +34,8 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead: "+msg.getClass().getName());
+        serverController.putLog(msg.getClass().getName());
         if (msg instanceof FileRequest) {
-            System.out.println("FileRequest");
             FileRequest fr = (FileRequest) msg;
             System.out.println("запрос на файл : " + Paths.get(serverDir , fr.getFilename()).toAbsolutePath().toString());
             if (Files.exists(Paths.get(serverDir , fr.getFilename()))) {
@@ -45,30 +45,27 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
             }
             ctx.writeAndFlush((Paths.get(((FileRequest) msg).getFilepath())));
         } else if (msg instanceof DeleteRequest) {
-            System.out.println("DeleteRequest");
             DeleteRequest dr = (DeleteRequest) msg;
             Files.delete(Paths.get(serverDir,dr.getFilename()));
             updateCloudListView(ctx);
         } else if (msg instanceof CloseConnectionRequest) {
-            System.out.println("CloseConnectionRequest");
             CloseConnectionRequest cr = (CloseConnectionRequest) msg;
             ctx.writeAndFlush(cr);
         } else if (msg instanceof FileMessage) {
-            System.out.println("FileMessage");
             FileMessage fm = (FileMessage) msg;
             Files.write(Paths.get(serverDir, fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
             updateCloudListView(ctx);
-        } else if (msg instanceof UpdateMessage) {
-            System.out.println("UpdateMessage");
+        } else if (msg instanceof UpdateRequest) {
             updateCloudListView(ctx);
         } else {
+            serverController.putLog("Server received wrong object!");
             System.out.printf("Server received wrong object!");
         }
     }
     private void updateCloudListView(ChannelHandlerContext ctx) throws IOException {
         ArrayList<String> sList = new ArrayList<>();
         Files.list(rootPathServer).map(path -> path.getFileName().toString()).forEach(sList::add);
-        ctx.writeAndFlush(new UpdateMessage(sList, rootPathServer.toAbsolutePath().toString()));
+        ctx.writeAndFlush(new UpdateRequest(sList, rootPathServer.toAbsolutePath().toString()));
     }
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
