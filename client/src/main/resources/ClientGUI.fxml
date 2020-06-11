@@ -6,13 +6,13 @@
 
 <VBox stylesheets="Styles.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.client.ClientController">
     <HBox maxWidth="Infinity" spacing="5.0">
-        <Label text="Логин" fx:id="loginLbl">
+        <Label text="Логин">
             <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </HBox.margin>
         </Label>
         <TextField fx:id="login" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-        <Label text="Пароль" fx:id="passwordLbl"/>
+        <Label text="Пароль" fx:id="lbl_password"/>
         <PasswordField  fx:id="password" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
         <Button fx:id="btn_connect" maxWidth="Infinity" onMouseClicked="#onClientAuthentic" text="Подключить" HBox.hgrow="ALWAYS" />
         <Button fx:id="btn_update" maxWidth="Infinity" onMouseClicked="#onClientDisconnect" text="Отключить" HBox.hgrow="ALWAYS" />
@@ -24,11 +24,10 @@
 
     </HBox>
     <HBox maxWidth="Infinity" spacing="5.0">
-        <Label text="Состояние">
+        <Label fx:id="lbl_state">
             <HBox.margin>
                 <Insets left="5.0" right="5.0" />
             </HBox.margin></Label>
-        <Label fx:id="state" />
         <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
         </HBox.margin>
@@ -38,7 +37,7 @@
     <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="Сервер" />
 
-        <Label fx:id="serverPath" />
+        <Label fx:id="lbl_serverPath"/>
         <ListView fx:id="serverFilesList" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
@@ -57,7 +56,7 @@
     </VBox>
     <VBox maxWidth="Infinity" spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="Клиент" />
-        <Label fx:id="clientPath" />
+        <Label fx:id="lbl_clientPath"/>
         <ListView fx:id="clientFilesList" onMouseClicked="#onClientFilesListDblClick" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />

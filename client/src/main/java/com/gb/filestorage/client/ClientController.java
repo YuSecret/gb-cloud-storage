@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,10 +29,10 @@ public class ClientController implements Initializable {
     ListView<String> clientFilesList;
 
     @FXML
-    Label clientPath;
+    Label lbl_clientPath;
 
     @FXML
-    Label serverPath;
+    Label lbl_serverPath;
 
     @FXML
     TextField login;
@@ -40,24 +41,25 @@ public class ClientController implements Initializable {
     PasswordField password;
 
     @FXML
-    Label loginLbl;
+    Label lbl_state;
 
     @FXML
-    Label passwordLbl;
+    Label lbl_password;
 
     @FXML
     Button btn_connect;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rootPathClient =  Paths.get("client_storage");
-        clientPath.setText(rootPathClient.toAbsolutePath().toString());
+        lbl_clientPath.setText(rootPathClient.toAbsolutePath().toString());
+        lbl_state.setText("Отключено");
         refreshLocalList();
        //gotoPath(rootClient, clientFilesList);
     }
 
     public void refreshServerList(List<String> files) {
         Platform.runLater(() -> {
-            serverPath.setText(rootPathServer.toAbsolutePath().toString());
+            lbl_serverPath.setText(rootPathServer.toAbsolutePath().toString());
             serverFilesList.getItems().clear();
             serverFilesList.getItems().addAll(files);
         });
@@ -74,7 +76,7 @@ public class ClientController implements Initializable {
             }
         });
     }
-// evants
+
     public void onClientAuthentic(MouseEvent mouseEvent) throws IOException {
         clientConnect();
         System.out.println("onClientAuthentication "+login.getText());
@@ -124,14 +126,18 @@ public class ClientController implements Initializable {
         if (isAthentic) {
             login.setEditable(false);
             password.setVisible(false);
-            passwordLbl.setVisible(false);
+            lbl_password.setVisible(false);
             btn_connect.setVisible(false);
+            lbl_state.setText("Подключено");
+            //lbl_state.setTextFill(Color.GREEN);
         }
         else {
             login.setEditable(true);
             password.setVisible(true);
-            passwordLbl.setVisible(true);
+            lbl_password.setVisible(true);
             btn_connect.setVisible(true);
+            lbl_state.setText("Отключено");
+            //lbl_state.setTextFill(Color.BLACK);
         }
     }
     public void onClientDisconnect(MouseEvent mouseEvent) {
@@ -139,15 +145,17 @@ public class ClientController implements Initializable {
         Client.sendToServer(new CloseConnectionRequest());
     }
     public void onClientDownLoadClick(MouseEvent mouseEvent) throws IOException {
-        System.out.println("onClientDownLoadClick");
-        FileRequest fr = new FileRequest(serverFilesList.getSelectionModel().getSelectedItem(), rootPathServer.toAbsolutePath().toString());
+        String item = serverFilesList.getSelectionModel().getSelectedItem();
+        if (item == null || item.isEmpty()) {return;}
+        FileRequest fr = new FileRequest(item, rootPathServer.toAbsolutePath().toString());
         Client.sendToServer(fr);
     }
     public void onServerDownLoadClick(MouseEvent mouseEvent) throws IOException {
-        System.out.println("onServerDownLoadClick run!!!");
-        if (Files.exists(Paths.get(rootPathClient.toAbsolutePath().toString(), clientFilesList.getSelectionModel().getSelectedItem()))) {
+        String item = clientFilesList.getSelectionModel().getSelectedItem();
+        if (item == null || item.isEmpty()) {return;}
+        if (Files.exists(Paths.get(rootPathClient.toAbsolutePath().toString(), item))) {
             System.out.println("На клиенте файл есть");
-            FileMessage fm = new FileMessage(Paths.get(rootPathClient.toAbsolutePath().toString(), clientFilesList.getSelectionModel().getSelectedItem()));
+            FileMessage fm = new FileMessage(Paths.get(rootPathClient.toAbsolutePath().toString(), item));
             Client.sendToServer(fm);
         }
     }
@@ -176,11 +184,15 @@ public class ClientController implements Initializable {
     }
 
     public void onClientDeleteClick(MouseEvent mouseEvent) {
-        Client.sendToServer(new DeleteRequest(serverFilesList.getSelectionModel().getSelectedItem()));
+        String item = serverFilesList.getSelectionModel().getSelectedItem();
+        if (item == null || item.isEmpty()) {return;}
+        Client.sendToServer(new DeleteRequest(item));
     }
 
     public void onServerDeleteClick(MouseEvent mouseEvent) throws IOException {
-        Files.delete(Paths.get(rootPathClient.toAbsolutePath().toString(), clientFilesList.getSelectionModel().getSelectedItem()));
+        String item = clientFilesList.getSelectionModel().getSelectedItem();
+        if (item == null || item.isEmpty()) {return;}
+        Files.delete(Paths.get(rootPathClient.toAbsolutePath().toString(), item));
         refreshLocalList();
     }
 }
