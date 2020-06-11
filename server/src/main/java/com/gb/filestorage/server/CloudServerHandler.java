@@ -47,6 +47,8 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
                 CloseConnectionRequest cr = (CloseConnectionRequest) msg;
                 ctx.writeAndFlush(cr);
             } else {
+                ar.setAuthentic();
+                ctx.writeAndFlush(ar);
                 serverController.putLog(ar.getLogin()+" is authentificated.");
             }
 

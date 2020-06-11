@@ -4,9 +4,7 @@ import com.gb.filestorage.common.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -39,7 +37,16 @@ public class ClientController implements Initializable {
     TextField login;
 
     @FXML
-    TextField password;
+    PasswordField password;
+
+    @FXML
+    Label loginLbl;
+
+    @FXML
+    Label passwordLbl;
+
+    @FXML
+    Button btn_connect;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rootPathClient =  Paths.get("client_storage");
@@ -78,37 +85,54 @@ public class ClientController implements Initializable {
         Client.start();
         Thread t = new Thread( () -> {
             try {
-                System.out.println("thread start");
                 while (true) {
-                    System.out.println("thread start cikl");
                     AbstractMessage am = Client.readFromServer();
-                    System.out.println("onClientConnect Client read object");
+                    if (am instanceof AuthenticationRequest) {
+                        System.out.println("ClientConnect AuthenticationRequest");
+                        onAuthentic(true);
+                        Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
+                    }
                     if (am instanceof FileMessage) {
-                        System.out.println("onClientConnect FileMessage");
+                        System.out.println("ClientConnect FileMessage");
                         FileMessage fm = (FileMessage) am;
                         Files.write(Paths.get("client_storage", fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalList();
                     }
                     if (am instanceof UpdateRequest) {
-                        System.out.println("onClientConnect UpdateMessage");
+                        System.out.println("ClientConnect UpdateMessage");
                         UpdateRequest um = (UpdateRequest) am;
                         rootPathServer = Paths.get(um.getCurrentServerDir());
                         refreshServerList(um.getFileList());
                     }
                     if (am instanceof CloseConnectionRequest) {
-                        System.out.println("onClientConnect CloseConnectionRequest");
+                        System.out.println("ClientConnect CloseConnectionRequest");
                         break;
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {
+                onAuthentic(false);
                 Client.stop();
             }
         });
         t.setDaemon(true);
         t.start();
-        Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
+       // Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
+    }
+    public void onAuthentic(boolean isAthentic) {
+        if (isAthentic) {
+            login.setEditable(false);
+            password.setVisible(false);
+            passwordLbl.setVisible(false);
+            btn_connect.setVisible(false);
+        }
+        else {
+            login.setEditable(true);
+            password.setVisible(true);
+            passwordLbl.setVisible(true);
+            btn_connect.setVisible(true);
+        }
     }
     public void onClientDisconnect(MouseEvent mouseEvent) {
         System.out.println("onClientDisconnect");

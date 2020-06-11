@@ -6,17 +6,17 @@
 
 <VBox stylesheets="Styles.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gb.filestorage.client.ClientController">
     <HBox maxWidth="Infinity" spacing="5.0">
-        <Label text="Логин" >
+        <Label text="Логин" fx:id="loginLbl">
             <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </HBox.margin>
         </Label>
         <TextField fx:id="login" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-        <Label text="Пароль" />
-        <TextField fx:id="password" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-        <Button fx:id="btn_connect" maxWidth="Infinity" text="Подключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientAuthentic"/>
-        <Button fx:id="btn_update" maxWidth="Infinity" text="Отключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDisconnect"/>
-        <Button fx:id="btn_disconnect" maxWidth="Infinity" text="Выход" HBox.hgrow="ALWAYS" onMouseClicked="#onClientExit">
+        <Label text="Пароль" fx:id="passwordLbl"/>
+        <PasswordField  fx:id="password" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btn_connect" maxWidth="Infinity" onMouseClicked="#onClientAuthentic" text="Подключить" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btn_update" maxWidth="Infinity" onMouseClicked="#onClientDisconnect" text="Отключить" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btn_disconnect" maxWidth="Infinity" onMouseClicked="#onClientExit" text="Выход" HBox.hgrow="ALWAYS">
             <HBox.margin>
                 <Insets left="5.0" right="5.0" />
             </HBox.margin>
@@ -47,8 +47,8 @@
             <Insets bottom="5.0" top="5.0" />
          </padding></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDownLoadClick"/>
-            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS"  onMouseClicked="#onClientDeleteClick"/>
+            <Button maxWidth="Infinity" onMouseClicked="#onClientDownLoadClick" text="Копировать" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" onMouseClicked="#onClientDeleteClick" text="Удалить" HBox.hgrow="ALWAYS" />
         </HBox>
       <padding>
           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -63,12 +63,13 @@
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin></ListView>
         <HBox spacing="5">
-            <Button maxWidth="Infinity" text="Копировать" HBox.hgrow="ALWAYS" onMouseClicked="#onServerDownLoadClick"/>
-            <Button maxWidth="Infinity" text="Удалить" HBox.hgrow="ALWAYS" onMouseClicked="#onServerDeleteClick"/>
+            <Button maxWidth="Infinity" onMouseClicked="#onServerDownLoadClick" text="Копировать" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="Infinity" onMouseClicked="#onServerDeleteClick" text="Удалить" HBox.hgrow="ALWAYS" />
         </HBox>
       <padding>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
       </padding>
     </VBox>
     </HBox>
+   <PasswordField />
 </VBox>
