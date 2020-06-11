@@ -1,14 +1,14 @@
 package com.gb.filestorage.common;
 
-public class AuthenticationRequest {
-    private String userName;
-    private String passWord;
+public class AuthenticationRequest extends AbstractMessage{
+    private String login;
+    private String password;
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
-    public AuthenticationRequest(String userName, String passWord) {
-        this.userName = userName;
-        this.passWord = passWord;
+    public AuthenticationRequest(String login, String password) {
+        this.login = login;
+        this.password = password;
     }
 }

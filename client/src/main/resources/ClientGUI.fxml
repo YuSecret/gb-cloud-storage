@@ -14,7 +14,7 @@
         <TextField fx:id="login" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
         <Label text="Пароль" />
         <TextField fx:id="password" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-        <Button fx:id="btn_connect" maxWidth="Infinity" text="Подключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientConnect"/>
+        <Button fx:id="btn_connect" maxWidth="Infinity" text="Подключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientAuthentic"/>
         <Button fx:id="btn_update" maxWidth="Infinity" text="Отключить" HBox.hgrow="ALWAYS" onMouseClicked="#onClientDisconnect"/>
         <Button fx:id="btn_disconnect" maxWidth="Infinity" text="Выход" HBox.hgrow="ALWAYS" onMouseClicked="#onClientExit">
             <HBox.margin>

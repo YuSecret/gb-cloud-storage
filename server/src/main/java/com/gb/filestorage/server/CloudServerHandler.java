@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class CloudServerHandler extends ChannelInboundHandlerAdapter {
@@ -35,7 +36,10 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead: "+msg.getClass().getName());
         serverController.putLog(msg.getClass().getName());
-        if (msg instanceof FileRequest) {
+        if (msg instanceof AuthenticationRequest) {
+            AuthenticationRequest ar = (AuthenticationRequest) msg;
+            System.out.println("Пришел: " + ar.getLogin());
+        } else if (msg instanceof FileRequest) {
             FileRequest fr = (FileRequest) msg;
             System.out.println("запрос на файл : " + Paths.get(serverDir , fr.getFilename()).toAbsolutePath().toString());
             if (Files.exists(Paths.get(serverDir , fr.getFilename()))) {

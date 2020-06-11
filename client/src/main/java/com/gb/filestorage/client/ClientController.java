@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -34,25 +35,24 @@ public class ClientController implements Initializable {
     @FXML
     Label serverPath;
 
+    @FXML
+    TextField login;
+
+    @FXML
+    TextField password;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rootPathClient =  Paths.get("client_storage");
         clientPath.setText(rootPathClient.toAbsolutePath().toString());
         refreshLocalList();
        //gotoPath(rootClient, clientFilesList);
-
     }
 
     public void refreshServerList(List<String> files) {
         Platform.runLater(() -> {
-
             serverPath.setText(rootPathServer.toAbsolutePath().toString());
             serverFilesList.getItems().clear();
             serverFilesList.getItems().addAll(files);
-            /*
-            List<FileMessage> fmlist  = readFileMessagesFromListPath(files);
-
-             */
         });
     }
     public void refreshLocalList() {
@@ -68,7 +68,12 @@ public class ClientController implements Initializable {
         });
     }
 // evants
-    public void onClientConnect(MouseEvent mouseEvent) throws IOException {
+    public void onClientAuthentic(MouseEvent mouseEvent) throws IOException {
+        System.out.println("onClientUpdate");
+        Client.sendToServer(new AuthenticationRequest(login.getText(), password.getText()));
+    }
+
+    public void clientConnect() throws IOException {
         Client.start();
         Thread t = new Thread( () -> {
             try {
@@ -109,13 +114,11 @@ public class ClientController implements Initializable {
         Client.sendToServer(new CloseConnectionRequest());
     }
     public void onClientDownLoadClick(MouseEvent mouseEvent) throws IOException {
-        //refreshLocalList();
         System.out.println("onClientDownLoadClick");
         FileRequest fr = new FileRequest(serverFilesList.getSelectionModel().getSelectedItem(), rootPathServer.toAbsolutePath().toString());
         Client.sendToServer(fr);
     }
     public void onServerDownLoadClick(MouseEvent mouseEvent) throws IOException {
-        //refreshLocalList();
         System.out.println("onServerDownLoadClick run!!!");
         if (Files.exists(Paths.get(rootPathClient.toAbsolutePath().toString(), clientFilesList.getSelectionModel().getSelectedItem()))) {
             System.out.println("На клиенте файл есть");
@@ -145,11 +148,6 @@ public class ClientController implements Initializable {
     public void onClientExit(MouseEvent mouseEvent) {
         Platform.exit();
         Client.stop();
-    }
-
-    public void onClientUpdate(MouseEvent mouseEvent) {
-        System.out.println("onClientUpdate");
-        Client.sendToServer(new UpdateRequest(new ArrayList<>(), ""));
     }
 
     public void onClientDeleteClick(MouseEvent mouseEvent) {
