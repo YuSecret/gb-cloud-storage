@@ -69,7 +69,8 @@ public class ClientController implements Initializable {
     }
 // evants
     public void onClientAuthentic(MouseEvent mouseEvent) throws IOException {
-        System.out.println("onClientUpdate");
+        clientConnect();
+        System.out.println("onClientAuthentication "+login.getText());
         Client.sendToServer(new AuthenticationRequest(login.getText(), password.getText()));
     }
 

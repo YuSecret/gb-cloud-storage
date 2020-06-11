@@ -40,9 +40,11 @@ public class CloudServer implements  ServerListener{
                     });
 //                    .childOption(ChannelOption.SO_KEEPALIVE, true);
             onServerMessage(serverController,"Server started...");
+            SqlClient.connect();
             future = b.bind(port).sync();
             future.channel().closeFuture().sync();
             onServerMessage(serverController,"Server stopped...");
+            SqlClient.disconnect();
         } finally {
             mainGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

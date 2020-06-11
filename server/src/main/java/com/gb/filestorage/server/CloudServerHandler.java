@@ -35,10 +35,21 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead: "+msg.getClass().getName());
-        serverController.putLog(msg.getClass().getName());
         if (msg instanceof AuthenticationRequest) {
             AuthenticationRequest ar = (AuthenticationRequest) msg;
+            serverController.putLog("Authentication: "+ar.getLogin());
+            String nickname = SqlClient.getNickname(ar.getLogin(), ar.getPassword());
+
             System.out.println("Пришел: " + ar.getLogin());
+
+            if (nickname == null) {
+                System.out.println("Ошибка аутентификации, отключение пользователя"+ ar.getLogin());
+                CloseConnectionRequest cr = (CloseConnectionRequest) msg;
+                ctx.writeAndFlush(cr);
+            } else {
+                serverController.putLog(ar.getLogin()+" is authentificated.");
+            }
+
         } else if (msg instanceof FileRequest) {
             FileRequest fr = (FileRequest) msg;
             System.out.println("запрос на файл : " + Paths.get(serverDir , fr.getFilename()).toAbsolutePath().toString());
@@ -52,15 +63,15 @@ public class CloudServerHandler extends ChannelInboundHandlerAdapter {
             DeleteRequest dr = (DeleteRequest) msg;
             Files.delete(Paths.get(serverDir,dr.getFilename()));
             updateCloudListView(ctx);
-        } else if (msg instanceof CloseConnectionRequest) {
-            CloseConnectionRequest cr = (CloseConnectionRequest) msg;
-            ctx.writeAndFlush(cr);
         } else if (msg instanceof FileMessage) {
             FileMessage fm = (FileMessage) msg;
             Files.write(Paths.get(serverDir, fm.getFileName()), fm.getData(), StandardOpenOption.CREATE);
             updateCloudListView(ctx);
         } else if (msg instanceof UpdateRequest) {
             updateCloudListView(ctx);
+        } else if (msg instanceof CloseConnectionRequest) {
+            CloseConnectionRequest cr = (CloseConnectionRequest) msg;
+            ctx.writeAndFlush(cr);
         } else {
             serverController.putLog("Server received wrong object!");
             System.out.printf("Server received wrong object!");
